@@ -37,6 +37,7 @@ int main (){
     SNodo_agregar_final(&inicio, 1);
     SNodo_agregar_final(&inicio, 2);
     SNodo_agregar_final(&inicio, 3);
+    
     SNodo_recorrer(inicio);
     return 0;
 }
