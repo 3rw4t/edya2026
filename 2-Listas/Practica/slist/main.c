@@ -90,10 +90,19 @@ void test_insertar(){
   slist_recorrer(lista, imprimir_entero);
   puts("");
 }
+
+void test_contiene(){
+  SList lista = slist_crear();
+  lista = slist_agregar_inicio(lista, 3);
+  lista = slist_agregar_inicio(lista, 2);
+  lista = slist_agregar_inicio(lista, 1);
+  printf("Lista contiene 5?: %d\n", slist_contiene(lista, 1));
+} 
 int main(int argc, char *argv[]) {
   //test_partir();
   //test_longitud();
   //test_concatenar();
-  test_insertar();
+  //test_insertar();
+  test_contiene();
   return 0;
 }

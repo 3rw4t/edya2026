@@ -92,3 +92,8 @@ void slist_insertar(SList lista, int dato, int posicion){
 
 
 }
+
+int slist_contiene(SList lista, int dato){
+  for ( ;lista->sig != NULL; lista = lista->sig) if (lista->dato == dato) return 1; 
+  return 0;
+}
