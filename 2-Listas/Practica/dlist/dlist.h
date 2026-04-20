@@ -23,4 +23,10 @@ void dlist_destruir(DList *lista);
 // Agrega un elemento al inicio
 DList* dlist_agregar_inicio (DList *lista, int dato);
 
-#endif /* __SLIST_H__ */
+DList *dlist_agregar_final (DList *lista, int dato);
+
+void dlist_recorrer(DList *lista);
+
+
+
+#endif /* __DLIST_H__ */

@@ -16,7 +16,22 @@ void test_agregar_inicio(){
 
 }
 
+void test_agregar_final(){
+    DList * lista = dlist_crear();
+
+    lista = dlist_agregar_final(lista, 1);
+    lista = dlist_agregar_final(lista, 2);
+    lista = dlist_agregar_final(lista, 3);
+
+    dlist_recorrer(lista);
+
+    dlist_destruir(lista);
+    free(lista);
+
+}
+
 int main(){
-    test_agregar_inicio();
+    //test_agregar_inicio();
+    test_agregar_final();
 
 }

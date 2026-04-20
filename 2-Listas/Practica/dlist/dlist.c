@@ -30,8 +30,35 @@ DList* dlist_agregar_inicio(DList *lista,int dato){
 
         return nuevaLista;
     }
+    lista->primero->ant = nuevoNodo;
     nuevoNodo->sig = lista->primero;
     lista->primero = nuevoNodo;
     return lista;
 
 }
+
+DList *dlist_agregar_final (DList *lista, int dato){
+    DNodo * nuevoNodo = malloc(sizeof(DNodo));
+    nuevoNodo->dato = dato;
+    nuevoNodo->sig = NULL;
+    if(!lista){
+        DList * nuevaLista = malloc(sizeof(DList));
+        nuevaLista->primero = nuevoNodo;
+        nuevaLista->ultimo = nuevoNodo;
+
+        nuevoNodo->ant = NULL;
+
+        return nuevaLista;
+    }
+    
+    lista->ultimo->sig = nuevoNodo;
+    nuevoNodo->ant = lista->ultimo;
+    lista->ultimo = nuevoNodo;
+    return lista;
+}
+
+void dlist_recorrer(DList *lista){
+    int contador = 0;
+    DNodo * temp = lista->primero;
+    for(; temp; temp = temp->sig, contador++) printf ("dato n°%d= %d\n", contador,temp->dato);
+};
