@@ -96,13 +96,26 @@ void test_contiene(){
   lista = slist_agregar_inicio(lista, 3);
   lista = slist_agregar_inicio(lista, 2);
   lista = slist_agregar_inicio(lista, 1);
-  printf("Lista contiene 5?: %d\n", slist_contiene(lista, 1));
+  printf("Lista contiene 3?: %d\n", slist_contiene(lista, 3));
 } 
+
+void test_indice(){
+  SList lista = slist_crear();
+  lista = slist_agregar_inicio(lista, 3);
+  lista = slist_agregar_inicio(lista, 2);
+  lista = slist_agregar_inicio(lista, 1);
+  printf("Lista contiene 1?: %d\n", slist_indice(lista, 1));
+  printf("Lista contiene 2?: %d\n", slist_indice(lista, 2));
+  printf("Lista contiene 3?: %d\n", slist_indice(lista, 3));
+  printf("Lista contiene 5?: %d\n", slist_indice(lista, 5));
+}
+
 int main(int argc, char *argv[]) {
   //test_partir();
   //test_longitud();
   //test_concatenar();
   //test_insertar();
-  test_contiene();
+  //test_contiene();
+  test_indice();
   return 0;
 }

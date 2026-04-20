@@ -51,4 +51,7 @@ SList slist_concatenar(SList lista1, SList lista2);
 void slist_insertar(SList lista, int dato, int posicion);
 
 int slist_contiene(SList lista, int dato);
+
+int slist_indice(SList lista, int dato);
+
 #endif /* __SLIST_H__ */
