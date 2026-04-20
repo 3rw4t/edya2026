@@ -10,6 +10,10 @@ void test_agregar_inicio(){
     lista = dlist_agregar_inicio(lista, 1);
     DNodo * temp = lista->primero;
     for(; temp; temp = temp->sig) printf ("dato = %d\n", temp->dato);
+
+    dlist_destruir(lista);
+    free(lista);
+
 }
 
 int main(){
