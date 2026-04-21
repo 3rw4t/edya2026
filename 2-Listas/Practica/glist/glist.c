@@ -39,9 +39,35 @@ GList glist_agregar_inicio(GList list, void *data, FuncionCopia copy) {
 }
 
 /**
+ * Agrega un elemento al final de la lista.
+ * copy es una función que retorna una copia física del dato.
+ */
+GList glist_agregar_final(GList list, void *data, FuncionCopia copy) {
+  GNode *newNode = malloc(sizeof(GNode));
+  assert(newNode != NULL);
+  newNode->next = NULL;
+  newNode->data = copy(data);
+
+  if(!list) return newNode;
+
+  GList temp = list;
+  for (;temp->next; temp = temp->next);
+  temp->next = newNode;
+  return list;
+}
+
+
+/**
  * Recorrido de la lista, utilizando la funcion pasada.
  */
 void glist_recorrer(GList list, FuncionVisitante visit) {
   for (GNode *node = list; node != NULL; node = node->next)
     visit(node->data);
+}
+
+
+GList glist_filtrar(GList lista, FuncionCopia copia, Predicado predicado){
+  GList nueva = glist_crear();
+  for (;lista; lista = lista->next) if (predicado(lista->data)) nueva = glist_agregar_final(nueva, lista->data, copia);
+  return nueva;
 }

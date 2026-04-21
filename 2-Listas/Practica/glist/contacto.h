@@ -37,4 +37,5 @@ void contacto_destruir(Contacto *contacto);
  */
 void contacto_imprimir(Contacto *contacto);
 
+int contacto_predicado(Contacto* contacto);
 #endif /* __CONTACTO_H__ */

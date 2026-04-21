@@ -4,7 +4,7 @@
 typedef void (*FuncionDestructora)(void *dato);
 typedef void *(*FuncionCopia)(void *dato);
 typedef void (*FuncionVisitante)(void *dato);
-
+typedef int (*Predicado)(void *dato);
 typedef struct _GNode {
   void *data;
   struct _GNode *next;
@@ -33,8 +33,17 @@ int glist_vacia(GList lista);
 GList glist_agregar_inicio(GList lista, void *dato, FuncionCopia copiar);
 
 /**
+ * Agrega un elemento al final de la lista.
+ */
+GList glist_agregar_final(GList lista, void *dato, FuncionCopia copiar);
+
+
+/**
  * Recorrido de la lista, utilizando la funcion pasada.
  */
 void glist_recorrer(GList lista, FuncionVisitante visitar);
+
+
+GList glist_filtrar(GList lista, FuncionCopia c, Predicado p);
 
 #endif /* __GLIST_H__ */
