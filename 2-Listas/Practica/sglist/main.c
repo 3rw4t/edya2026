@@ -1,0 +1,36 @@
+#include "contacto.h"
+#include "sglist.h"
+#include <stdio.h>
+#include <stdlib.h>
+
+
+
+void test_insertar(){
+  SGList lista = sglist_crear();
+  Contacto *contactos[6];
+  contactos[0] = contacto_crear("Pepe Brgento", "3412695452", 61);
+  contactos[1] = contacto_crear("Moni Argento", "3412684759", 60);
+  contactos[2] = contacto_crear("Coqui Argento", "3415694286", 32);
+  contactos[3] = contacto_crear("Paola Argento", "3416259862", 29);
+  contactos[4] = contacto_crear("Maria Elena Fuseneco", "3416874594", 59);
+  contactos[5] = contacto_crear("Dardo Fuseneco", "3416894526", 64);
+
+  for (int i = 0; i < 6; ++i) {
+    lista = sglist_insertar(lista, contactos[i], (FuncionCopia)contacto_copia, (FuncionComparadora)contacto_comparar);
+
+  
+    contacto_destruir(contactos[i]);
+  }
+  printf("Lista insert:\n");
+
+  //lista = glist_filtrar(lista, (FuncionCopia)contacto_copia, (Predicado)contacto_predicado);
+  
+  sglist_recorrer(lista, (FuncionVisitante)contacto_imprimir);
+}
+
+
+int main() {
+  //test_filtrar();
+  test_insertar();
+  return 0;
+}
