@@ -8,7 +8,6 @@ DList * dlist_crear (){
 }
 
 void dlist_destruir (DList *lista){
-    if(!lista) return;
     DNodo * temp;
     while (lista->primero){
         temp = lista->primero;
