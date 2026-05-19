@@ -12,7 +12,7 @@ int main() {
   BTree r = btree_unir(3, btree_crear(), btree_crear());
   BTree raiz = btree_unir(4, l, r);
 
-  btree_recorrer(raiz, BTREE_RECORRIDO_POST, imprimir_entero);
+  btree_recorrer(raiz, BTREE_RECORRIDO_PRE, imprimir_entero);
   puts("");
   btree_destruir(raiz);
 

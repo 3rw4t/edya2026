@@ -8,6 +8,44 @@ struct _BTNodo {
   struct _BTNodo *right;
 };
 
+struct _SNodo {
+  struct _BTNodo* dato;
+  struct _SNodo * sig;
+};
+
+
+typedef struct _Stack {
+  struct _SNodo* nodo;
+} *Stack;
+
+Stack stack_crear (){
+  Stack new = malloc(sizeof(struct _Stack));
+  new->nodo = NULL;
+  return new;
+}
+
+int stack_isEmpty(Stack pila){
+  return pila->nodo == NULL;
+}
+
+void stack_push (Stack pila, struct _BTNodo* dato){
+  struct _SNodo * new = malloc(sizeof(struct _SNodo));
+  new->dato = dato;
+  new->sig = pila->nodo;
+  pila->nodo = new;
+}
+void stack_pop (Stack pila){
+  if (stack_isEmpty(pila)) return;
+  // struct _SNodo * temp =  pila->nodo;
+  pila->nodo = pila->nodo->sig;
+  // free(temp);
+}
+
+BTree stack_top(Stack pila){
+  if (stack_isEmpty(pila)) return NULL;
+  return pila->nodo->dato;
+}
+
 /**
  * Devuelve un arbol vacío.
  */
@@ -62,8 +100,24 @@ void btree_recorrer(BTree arbol, BTreeOrdenDeRecorrido orden,
   }
 
   if (orden == BTREE_RECORRIDO_PRE ){  
+    
+    /* 
+    // version recursiva
     visit(arbol->dato);
     btree_recorrer(arbol->left, orden, visit);
     btree_recorrer(arbol->right, orden, visit);
+    */
+    
+    // version iterativa
+    Stack pila = stack_crear();
+    stack_push(pila,arbol);
+    for (;!stack_isEmpty(pila) ; stack_pop(pila)){
+      for(;arbol; arbol= arbol->left){
+        visit(arbol->dato);
+        if (arbol->right) stack_push(pila, arbol->right);
+      }
+      arbol = stack_top(pila);
+    }
+
   }
 }
