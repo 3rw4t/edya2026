@@ -133,8 +133,25 @@ int btree_nnodos(BTree arbol){
   return 1 + btree_nnodos(arbol->right) + btree_nnodos(arbol->left);
 }
 
+/*
+  Devuelve 1 si el número dado se encuentra en el arbol, y 0 en caso contrario
+*/
 int btree_buscar(BTree arbol, int dato){
   if (!arbol) return 0;
   if (arbol->dato == dato) return 1;
   else return btree_buscar(arbol->left, dato) || btree_buscar(arbol->right, dato);
+}
+
+/*
+  Devuelve un nuevo árbol que es una copia del árbol dado
+*/
+BTree btree_copiar(BTree arbol){
+  if (!arbol) return NULL;
+
+  struct _BTNodo * new = malloc(sizeof(struct _BTNodo));
+  new->dato = arbol->dato;
+  new->left = btree_copiar(arbol->left);
+  new->right = btree_copiar(arbol->right);
+  
+  return new;
 }

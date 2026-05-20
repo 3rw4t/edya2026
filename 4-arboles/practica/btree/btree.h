@@ -48,4 +48,10 @@ int btree_nnodos(BTree arbol);
 */
 int btree_buscar(BTree arbol, int dato);
 
+/*
+  Devuelve un nuevo árbol que es una copia del árbol dado
+*/
+BTree btree_copiar(BTree arbol);
+
+
 #endif /* __BTREE_H__ */
