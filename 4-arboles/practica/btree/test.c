@@ -25,7 +25,11 @@ int main() {
   printf("\nraizCopia 1 está?: %d\n", btree_buscar(raizCopia, 1));
   printf("\nraizCopia 99 está?: %d\n", btree_buscar(raizCopia, 99));
   printf("\nraizCopia altura: %d\n", btree_altura(raizCopia));
-  
+  printf("\nraizCopia cant nodos profundidad = 0: %d\n", btree_nnodos_profundidad(raizCopia, 0));
+  printf("\nraizCopia cant nodos profundidad = 1: %d\n", btree_nnodos_profundidad(raizCopia, 1));
+  printf("\nraizCopia cant nodos profundidad = 2: %d\n", btree_nnodos_profundidad(raizCopia, 2));
+  printf("\nraizCopia cant nodos profundidad = 3: %d\n", btree_nnodos_profundidad(raizCopia, 3));
+  printf("\nraizCopia cant nodos profundidad = 4: %d\n", btree_nnodos_profundidad(raizCopia, 4));
   btree_destruir(raizCopia);
 
   return 0;

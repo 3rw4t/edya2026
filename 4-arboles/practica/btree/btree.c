@@ -168,4 +168,8 @@ int btree_altura(BTree arbol){
 /*
   Devuelve el número de nodos que se encuentran a la profundidad dada
 */
-int btree_nnodos_profundidad(BTree arbol, int profundidad);
+int btree_nnodos_profundidad(BTree arbol, int profundidad){
+  if (!arbol) return 0;
+  if (!profundidad) return 1;
+  else return btree_nnodos_profundidad(arbol->left, profundidad - 1) + btree_nnodos_profundidad(arbol->right, profundidad - 1);
+}

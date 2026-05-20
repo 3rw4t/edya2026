@@ -58,4 +58,8 @@ BTree btree_copiar(BTree arbol);
 */
 int btree_altura(BTree arbol);
 
+/*
+  Devuelve el número de nodos que se encuentran a la profundidad dada
+*/
+int btree_nnodos_profundidad(BTree arbol, int profundidad);
 #endif /* __BTREE_H__ */
