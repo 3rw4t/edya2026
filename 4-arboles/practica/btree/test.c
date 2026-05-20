@@ -15,6 +15,8 @@ int main() {
   btree_recorrer(raiz, BTREE_RECORRIDO_PRE, imprimir_entero);
   puts("");
   printf("\ncantidad de nodos: %d\n", btree_nnodos(raiz));
+  printf("\n1 está?: %d\n", btree_buscar(raiz, 1));
+  printf("\n99 está?: %d\n", btree_buscar(raiz, 99));
   btree_destruir(raiz);
 
   return 0;

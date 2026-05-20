@@ -2,6 +2,8 @@
 #include <assert.h>
 #include <stdlib.h>
 
+#include <stdio.h>
+
 struct _BTNodo {
   int dato;
   struct _BTNodo *left;
@@ -128,7 +130,11 @@ void btree_recorrer(BTree arbol, BTreeOrdenDeRecorrido orden,
 */
 int btree_nnodos(BTree arbol){
   if (!arbol) return 0;
-  return 1 + btree_nndos(arbol->right) + btree_nnodos(arbol->left);
+  return 1 + btree_nnodos(arbol->right) + btree_nnodos(arbol->left);
 }
 
-
+int btree_buscar(BTree arbol, int dato){
+  if (!arbol) return 0;
+  if (arbol->dato == dato) return 1;
+  else return btree_buscar(arbol->left, dato) || btree_buscar(arbol->right, dato);
+}

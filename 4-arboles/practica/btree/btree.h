@@ -42,4 +42,10 @@ void btree_recorrer(BTree arbol, BTreeOrdenDeRecorrido orden,
   Retorna el número de nodos del árbol
 */
 int btree_nnodos(BTree arbol);
+
+/*
+  Devuelve 1 si el número dado se encuentra en el arbol, y 0 en caso contrario
+*/
+int btree_buscar(BTree arbol, int dato);
+
 #endif /* __BTREE_H__ */
