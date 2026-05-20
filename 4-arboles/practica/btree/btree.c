@@ -179,22 +179,14 @@ int btree_nnodos_profundidad(BTree arbol, int profundidad){
 */
 int btree_profundidad(BTree arbol, int numero){
 
-  if (arbol == NULL) {
-    return -1;
-  }
-  if (arbol->dato == numero) {
-    return 0;
-  }
+  if (arbol == NULL) return -1;
+  if (arbol->dato == numero) return 0;
   
   int izq = btree_profundidad(arbol->left, numero);
-  if (izq != -1) {
-    return izq + 1;
-  }
+  if (izq != -1) return izq + 1;
   
   int der = btree_profundidad(arbol->right, numero);
-  if (der != -1) {
-    return der + 1;
-  }
+  if (der != -1) return der + 1;
 
   return -1;
 }
