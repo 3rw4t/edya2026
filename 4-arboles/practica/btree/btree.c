@@ -121,3 +121,14 @@ void btree_recorrer(BTree arbol, BTreeOrdenDeRecorrido orden,
 
   }
 }
+
+
+/*
+  Retorna el número de nodos del árbol
+*/
+int btree_nnodos(BTree arbol){
+  if (!arbol) return 0;
+  return 1 + btree_nndos(arbol->right) + btree_nnodos(arbol->left);
+}
+
+

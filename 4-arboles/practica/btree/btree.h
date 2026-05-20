@@ -38,4 +38,8 @@ BTree btree_unir(int dato, BTree left, BTree right);
 void btree_recorrer(BTree arbol, BTreeOrdenDeRecorrido orden,
                     FuncionVisitante visit);
 
+/*
+  Retorna el número de nodos del árbol
+*/
+int btree_nnodos(BTree arbol);
 #endif /* __BTREE_H__ */
