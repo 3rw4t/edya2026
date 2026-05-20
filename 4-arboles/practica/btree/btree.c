@@ -173,3 +173,28 @@ int btree_nnodos_profundidad(BTree arbol, int profundidad){
   if (!profundidad) return 1;
   else return btree_nnodos_profundidad(arbol->left, profundidad - 1) + btree_nnodos_profundidad(arbol->right, profundidad - 1);
 }
+
+/*
+  Devuelve la profundidad del nodo que contiene el número dado, y -1 si el número nose encuentra en el arbol;
+*/
+int btree_profundidad(BTree arbol, int numero){
+
+  if (arbol == NULL) {
+    return -1;
+  }
+  if (arbol->dato == numero) {
+    return 0;
+  }
+  
+  int izq = btree_profundidad(arbol->left, numero);
+  if (izq != -1) {
+    return izq + 1;
+  }
+  
+  int der = btree_profundidad(arbol->right, numero);
+  if (der != -1) {
+    return der + 1;
+  }
+
+  return -1;
+}
