@@ -53,5 +53,9 @@ int btree_buscar(BTree arbol, int dato);
 */
 BTree btree_copiar(BTree arbol);
 
+/*
+  Devuelve la altura del árbol
+*/
+int btree_altura(BTree arbol);
 
 #endif /* __BTREE_H__ */

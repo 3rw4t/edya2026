@@ -152,6 +152,20 @@ BTree btree_copiar(BTree arbol){
   new->dato = arbol->dato;
   new->left = btree_copiar(arbol->left);
   new->right = btree_copiar(arbol->right);
-  
+
   return new;
 }
+
+/*
+  Devuelve la altura del árbol
+*/
+int btree_altura(BTree arbol){
+  if (!arbol) return -1;
+  if (btree_altura(arbol->left) > btree_altura(arbol->right)) return 1 + btree_altura(arbol->left);
+  else return 1 + btree_altura(arbol->right);
+}
+
+/*
+  Devuelve el número de nodos que se encuentran a la profundidad dada
+*/
+int btree_nnodos_profundidad(BTree arbol, int profundidad);

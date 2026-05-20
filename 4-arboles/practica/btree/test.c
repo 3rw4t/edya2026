@@ -24,6 +24,8 @@ int main() {
   printf("\nraizCopia cantidad de nodos: %d\n", btree_nnodos(raizCopia));
   printf("\nraizCopia 1 está?: %d\n", btree_buscar(raizCopia, 1));
   printf("\nraizCopia 99 está?: %d\n", btree_buscar(raizCopia, 99));
+  printf("\nraizCopia altura: %d\n", btree_altura(raizCopia));
+  
   btree_destruir(raizCopia);
 
   return 0;
