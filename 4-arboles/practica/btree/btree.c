@@ -198,3 +198,13 @@ int btree_profundidad(BTree arbol, int numero){
 
   return -1;
 }
+
+/*
+  Devuelve la suma total de los datos del árbol
+*/
+int btree_sumar(BTree arbol){
+  
+  if(!arbol) return 0;
+  
+  return arbol->dato + btree_sumar(arbol->left) + btree_sumar(arbol->right); 
+}

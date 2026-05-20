@@ -68,4 +68,9 @@ int btree_nnodos_profundidad(BTree arbol, int profundidad);
 */
 int btree_profundidad(BTree arbol, int numero);
 
+/*
+  Devuelve la suma total de los datos del árbol
+*/
+int btree_sumar(BTree arbol);
+
 #endif /* __BTREE_H__ */
