@@ -80,4 +80,9 @@ int btree_sumar(BTree arbol);
 */
 void btree_recorrer_extra(BTree arbol, BTreeOrdenDeRecorrido orden, FuncionVisitanteExtra visit, void *extra);
 
+/*
+  Recorre el arbol con el algoritmo de búsqueda por extensión
+*/
+void btree_recorrer_bfs(BTree arbol, FuncionVisitante visit);
+
 #endif /* __BTREE_H__ */

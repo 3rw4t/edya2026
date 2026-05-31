@@ -17,6 +17,8 @@ int main() {
   BTree raizCopia = btree_copiar(raiz);
   btree_recorrer_extra(raiz, BTREE_RECORRIDO_PRE, imprimir_entero_extra, NULL);
   puts("");
+  btree_recorrer_bfs(raiz, imprimir_entero);
+  puts("");
   printf("\ncantidad de nodos: %d\n", btree_nnodos(raiz));
   printf("\n1 está?: %d\n", btree_buscar(raiz, 1));
   printf("\n99 está?: %d\n", btree_buscar(raiz, 99));

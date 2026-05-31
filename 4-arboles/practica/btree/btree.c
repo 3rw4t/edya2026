@@ -14,11 +14,23 @@ struct _SNodo {
   struct _BTNodo* dato;
   struct _SNodo * sig;
 };
+struct _DNodo {
+  struct _BTNodo* dato;
+  struct _DNodo * sig;
+  struct _DNodo * prev;
+};
 
 
 typedef struct _Stack {
   struct _SNodo* nodo;
 } *Stack;
+
+typedef struct _Queue {
+  struct _DNodo* primero;
+  struct _DNodo* ultimo;
+} *Queue;
+
+
 
 Stack stack_crear (){
   Stack new = malloc(sizeof(struct _Stack));
@@ -26,8 +38,18 @@ Stack stack_crear (){
   return new;
 }
 
+Queue queue_crear (){
+  Queue new = malloc(sizeof(struct _Queue));
+  new->primero = NULL;
+  new->ultimo = NULL;
+  return new;
+}
+
 int stack_isEmpty(Stack pila){
   return pila->nodo == NULL;
+}
+int queue_isEmpty(Queue cola){
+  return cola->primero == NULL;
 }
 
 void stack_push (Stack pila, struct _BTNodo* dato){
@@ -36,11 +58,31 @@ void stack_push (Stack pila, struct _BTNodo* dato){
   new->sig = pila->nodo;
   pila->nodo = new;
 }
+
+void queue_enqueue (Queue cola, struct _BTNodo* dato){
+  if (!dato) return;
+  struct _DNodo * new = malloc(sizeof(struct _DNodo));
+  new->dato = dato;
+  new->sig = NULL;
+  new->prev = cola->ultimo;
+  if(cola->ultimo) cola->ultimo->sig = new;
+  cola->ultimo = new;
+  if(queue_isEmpty(cola)) cola->primero = new;
+}
+
 void stack_pop (Stack pila){
   if (stack_isEmpty(pila)) return;
   // struct _SNodo * temp =  pila->nodo;
   pila->nodo = pila->nodo->sig;
   // free(temp);
+}
+
+void queue_dequeue (Queue cola){
+  if (queue_isEmpty(cola)) return;
+  if (cola->primero == cola->ultimo) cola->ultimo = NULL;
+  cola->primero = cola->primero->sig;
+  if(cola->primero)cola->primero->prev = NULL;
+ 
 }
 
 BTree stack_top(Stack pila){
@@ -226,5 +268,28 @@ void btree_recorrer_extra(BTree arbol, BTreeOrdenDeRecorrido orden, FuncionVisit
     visit(arbol->dato, extra);
   }
 
+  return;
+}
+
+/*
+  Recorre el arbol con el algoritmo de búsqueda por extensión
+*/
+void btree_recorrer_bfs(BTree arbol, FuncionVisitante visit){
+  if(!arbol) return;
+  
+  Queue cola = queue_crear();
+  
+  queue_enqueue(cola, arbol);
+  
+  BTree actual;
+  for(;!queue_isEmpty(cola); queue_dequeue(cola)){
+    actual = cola->primero->dato;
+    
+    visit(actual->dato);
+    if(actual->left) queue_enqueue(cola, actual->left);
+    if(actual->right) queue_enqueue(cola, actual->right);
+    
+  }
+  
   return;
 }
