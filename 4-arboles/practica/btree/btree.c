@@ -200,3 +200,31 @@ int btree_sumar(BTree arbol){
   
   return arbol->dato + btree_sumar(arbol->left) + btree_sumar(arbol->right); 
 }
+
+/*
+  Similar a btree_recorrer, salvo que ahora la faunción visitante es de tipo FuncionVisitanteExtra y se deberá aplicar tanto al dato almacenado
+  en el nodo como al dato extra
+*/
+void btree_recorrer_extra(BTree arbol, BTreeOrdenDeRecorrido orden, FuncionVisitanteExtra visit, void *extra){
+  if (!arbol) return;
+  
+  if(orden == BTREE_RECORRIDO_IN){
+    btree_recorrer_extra(arbol->left, orden, visit, extra);
+    visit(arbol->dato, extra);
+    btree_recorrer_extra(arbol->right, orden, visit, extra);
+  }
+
+  if(orden == BTREE_RECORRIDO_PRE){
+    visit(arbol->dato, extra);
+    btree_recorrer_extra(arbol->left, orden, visit, extra);
+    btree_recorrer_extra(arbol->right, orden, visit, extra);
+  }
+
+  if(orden == BTREE_RECORRIDO_POST){
+    btree_recorrer_extra(arbol->left, orden, visit, extra);
+    btree_recorrer_extra(arbol->right, orden, visit, extra);
+    visit(arbol->dato, extra);
+  }
+
+  return;
+}
