@@ -131,3 +131,34 @@ BSTree bstree_eliminar(BSTree arbol, void *dato, FuncionComparadora cmp, Funcion
   } 
   return 0;
 }
+
+int btree_nnodos(BSTree arbol){
+  if (!arbol) return 0;
+  return 1 + btree_nnodos(arbol->izq) + btree_nnodos(arbol->der);
+}
+
+void* bstree_k_esimo_menor(BSTree arbol, int k) {
+    if (arbol == NULL || k <= 0) return NULL;
+
+    // 1. Buscar en el subárbol izquierdo
+    void *izq = bstree_k_esimo_menor(arbol->izq, k);
+    
+    // Si 'izq' no es NULL, significa que el nodo ya fue encontrado 
+    // en el subárbol izquierdo. Lo propagamos hacia arriba.
+    if (izq != NULL) return izq;
+
+    // ¿Cómo se enteró esta llamada de cuántos nodos se visitaron a la izquierda?
+    // Contamos cuántos nodos hay en el subárbol izquierdo para restárselos a nuestro k.
+    // (Nota: btree_nnodos es la función que ya tenías programada en tu archivo)
+    int nodos_izq = btree_nnodos(arbol->izq);
+    k = k - nodos_izq;
+
+    // 2. Procesar la raíz actual
+    if (k == 1) {
+        return arbol->dato; // ¡Este es el k-ésimo menor!
+    }
+
+    // 3. Buscar en el subárbol derecho
+    // Le restamos 1 a k (por la raíz que acabamos de descartar)
+    return bstree_k_esimo_menor(arbol->der, k - 1);
+}

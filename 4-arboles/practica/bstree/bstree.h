@@ -46,4 +46,12 @@ void bstree_recorrer(BSTree, BSTreeRecorrido, FuncionVisitanteExtra,
 */
 BSTree bstree_eliminar(BSTree arbol, void *dato, FuncionComparadora, FuncionDestructora);
 
+int btree_nnodos(BSTree arbol);
+
+void* bstree_k_esimo_menor(BSTree arbol, int k);
+
+/*
+  retorna 1 si el arbol es un BSTree, 0 si no
+*/
+int bstree_validar(BSTree arbol);
 #endif //__BSTREE_H__

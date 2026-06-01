@@ -47,6 +47,10 @@ int main() {
   bstree_eliminar(arbol, palabras[1], comparar_cadena, destruir_cadena);
   bstree_recorrer(arbol, BTREE_RECORRIDO_IN, imprimir_cadena, NULL);
   puts("");
+
+  printf("Recorrido inorden: ");
+  printf("\"%s\" ", (char *)bstree_k_esimo_menor(arbol, 2));
+  puts("");
   // Buscar elementos
   assert(bstree_buscar(arbol, "farmacia", comparar_cadena) == 1);
   assert(bstree_buscar(arbol, "santa fe", comparar_cadena) == 1);
