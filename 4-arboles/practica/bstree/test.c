@@ -43,6 +43,10 @@ int main() {
   bstree_recorrer(arbol, BTREE_RECORRIDO_IN, imprimir_cadena, NULL);
   puts("");
 
+  printf("Recorrido inorden: ");
+  bstree_eliminar(arbol, palabras[1], comparar_cadena, destruir_cadena);
+  bstree_recorrer(arbol, BTREE_RECORRIDO_IN, imprimir_cadena, NULL);
+  puts("");
   // Buscar elementos
   assert(bstree_buscar(arbol, "farmacia", comparar_cadena) == 1);
   assert(bstree_buscar(arbol, "santa fe", comparar_cadena) == 1);
@@ -53,6 +57,7 @@ int main() {
   assert(bstree_buscar(arbol, "mail", comparar_cadena) == 0);
   assert(bstree_buscar(arbol, "parques", comparar_cadena) == 0);
   assert(bstree_buscar(arbol, "EDyA1", comparar_cadena) == 0);
+
 
   // Destruir arbol
   bstree_destruir(arbol, destruir_cadena);

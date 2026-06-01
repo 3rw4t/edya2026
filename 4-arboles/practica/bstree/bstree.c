@@ -81,3 +81,53 @@ void bstree_recorrer(BSTree raiz, BSTreeRecorrido orden,
       visita(raiz->dato, extra);
   }
 }
+
+/*
+  Elimina un elemento del árbol. El árbol resultante es ABB
+*/
+BSTree bstree_eliminar(BSTree arbol, void *dato, FuncionComparadora cmp, FuncionDestructora destr){
+  if (!arbol) return arbol;
+
+  if (cmp(arbol->dato, dato) == 0) {
+
+    if (!arbol->izq && !arbol->der){
+      destr(arbol->dato);
+      free(arbol);
+      return NULL;
+    }else if (arbol->izq && arbol->der){
+
+      struct _BST_Nodo *temp = arbol->izq;
+
+      for (;temp->der; temp = temp->der);
+
+      void * dato_a_destruir = arbol->dato; // para no romper la referencia directa
+
+      arbol->dato = temp->dato;
+
+      arbol->izq = bstree_eliminar (arbol->izq, dato_a_destruir, cmp, destr);
+      return arbol;
+    }else if (arbol->izq) {
+
+      destr(arbol->dato);
+      struct _BST_Nodo* temp = arbol->izq;
+      free(arbol);
+      return temp;
+    }else{
+
+      destr(arbol->dato);
+      struct _BST_Nodo* temp = arbol->der;
+      free(arbol);
+      return temp;
+    }
+    
+
+  }else if (cmp(arbol->dato, dato) < 0){
+
+    arbol->der = bstree_eliminar(arbol->der, dato, cmp, destr);
+  
+  }else{
+    arbol->der = bstree_eliminar(arbol->izq, dato, cmp, destr);
+
+  } 
+  return 0;
+}

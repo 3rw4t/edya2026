@@ -41,4 +41,9 @@ BSTree bstree_insertar(BSTree, void *, FuncionCopiadora, FuncionComparadora);
 void bstree_recorrer(BSTree, BSTreeRecorrido, FuncionVisitanteExtra,
                      void *extra);
 
+/*
+  Elimina un elemento del árbol. El árbol resultante es ABB
+*/
+BSTree bstree_eliminar(BSTree arbol, void *dato, FuncionComparadora, FuncionDestructora);
+
 #endif //__BSTREE_H__
