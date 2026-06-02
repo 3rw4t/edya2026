@@ -162,3 +162,33 @@ void* bstree_k_esimo_menor(BSTree arbol, int k) {
     // Le restamos 1 a k (por la raíz que acabamos de descartar)
     return bstree_k_esimo_menor(arbol->der, k - 1);
 }
+
+// Función auxiliar que acarrea los límites permitidos para el nodo actual
+int bstree_validar_aux(BSTree arbol, void *minimo, void *maximo, FuncionComparadora cmp) {
+  // Caso base: un árbol vacío siempre es un ABB válido
+  if (arbol == NULL) return 1;
+
+  // 1. Validar contra el límite mínimo (si existe)
+  // El dato actual NO puede ser menor o igual al mínimo permitido
+  if (minimo != NULL && cmp(arbol->dato, minimo) <= 0) {
+    return 0; 
+  }
+
+  // 2. Validar contra el límite máximo (si existe)
+  // El dato actual NO puede ser mayor o igual al máximo permitido
+  if (maximo != NULL && cmp(arbol->dato, maximo) >= 0) {
+    return 0;
+  }
+
+  // 3. Validar recursivamente ambos subárboles con sus rangos actualizados
+  // - Para ir a la izquierda: el nuevo MAXIMO es la raíz actual.
+  // - Para ir a la derecha: el nuevo MINIMO es la raíz actual.
+  return bstree_validar_aux(arbol->izq, minimo, arbol->dato, cmp) &&
+         bstree_validar_aux(arbol->der, arbol->dato, maximo, cmp);
+}
+
+// Función principal que llama el usuario
+int bstree_validar(BSTree arbol, FuncionComparadora cmp) {
+  // Inicialmente, la raíz no tiene restricciones de mínimo ni de máximo (pasamos NULL)
+  return bstree_validar_aux(arbol, NULL, NULL, cmp);
+}

@@ -50,8 +50,10 @@ int btree_nnodos(BSTree arbol);
 
 void* bstree_k_esimo_menor(BSTree arbol, int k);
 
-/*
-  retorna 1 si el arbol es un BSTree, 0 si no
-*/
-int bstree_validar(BSTree arbol);
+
+// Función auxiliar que acarrea los límites permitidos para el nodo actual
+int bstree_validar_aux(BSTree arbol, void *minimo, void *maximo, FuncionComparadora cmp);
+// Función principal que llama el usuario
+int bstree_validar(BSTree arbol, FuncionComparadora cmp);
+
 #endif //__BSTREE_H__
