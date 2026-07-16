@@ -5,9 +5,10 @@
 
 /**
  * Casillas en la que almacenaremos los datos de la tabla hash.
+ * En este caso GNode para la implementación de encadenamiento para lidiar con colisiones
  */
-typedef struct {
-  void *dato;
+typedef struct _CasillaHash {
+  GNode *dato;
 } CasillaHash;
 
 /**
@@ -74,6 +75,19 @@ void tablahash_destruir(TablaHash tabla) {
   free(tabla->elems);
   free(tabla);
   return;
+}
+
+
+/**
+ * Inserta un dato en la tabla, o lo reemplaza si ya se encontraba.
+ * Gestión de colisions con encandenamiento (LSE)
+ */
+void tablahash_insertar_chaining(TablaHash tabla, void *dato) {
+  if (!tabla || !dato) return;
+  
+  unsigned id = tabla->hash(dato) % tabla->capacidad;
+  (tabla->elems[id]).dato = glist_agregar_inicio( (tabla->elems[id]).dato, dato, tabla->copia);
+  tabla->numElems++;
 }
 
 /**

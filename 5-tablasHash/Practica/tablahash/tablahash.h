@@ -37,6 +37,12 @@ void tablahash_destruir(TablaHash tabla);
 
 /**
  * Inserta un dato en la tabla, o lo reemplaza si ya se encontraba.
+ * Gestión de colisions con encandenamiento (LSE)
+ */
+void tablahash_insertar_chaining(TablaHash tabla, void *dato);
+
+/**
+ * Inserta un dato en la tabla, o lo reemplaza si ya se encontraba.
  */
 void tablahash_insertar(TablaHash tabla, void *dato);
 

@@ -35,13 +35,13 @@ int main() {
     printf(" en la casilla %d.\n",
            contacto_heashear(agenda[i]) % tablahash_capacidad(tabla));
     int nElems = tablahash_nelems(tabla);
-    tablahash_insertar(tabla, agenda[i]);
+    tablahash_insertar_chaining(tabla, agenda[i]);
     if (tablahash_nelems(tabla) == nElems)
       printf("\tInsercion fallida: Colision.\n");
     else
       printf("\tInsercion exitosa.\n");
   }
-
+/*
   // Buscar
   printf("\nBusqueda:\n");
   for (int i = 0; i < 6; ++i) {
@@ -98,6 +98,6 @@ int main() {
   for (int i = 0; i < 6; ++i)
     contacto_destruir(agenda[i]);
   contacto_destruir(nuevoContacto);
-
+*/
   return 0;
 }
