@@ -71,3 +71,24 @@ GList glist_filtrar(GList lista, FuncionCopia copia, Predicado predicado){
   for (;lista; lista = lista->next) if (predicado(lista->data)) nueva = glist_agregar_final(nueva, lista->data, copia);
   return nueva;
 }
+
+
+/*
+  Retorna 1 si el dato está en la lista, 0 si no.
+*/
+int glist_contiene(GList lista, void* dato, FuncionComparadora cmp){
+  if (!dato) return -1;
+
+  for (;lista; lista = lista->next) if (cmp(lista->data, dato) == 0) return 1;
+  return 0;
+}
+
+
+/*
+  Retorna el elemento si está en la lista, NULL si no
+*/
+GList glist_buscar(GList lista, void* dato, FuncionComparadora cmp){
+  if(!dato) return NULL;
+  for(;lista;lista =  lista->next) if (cmp(lista->data, dato) == 0) return lista;
+  return NULL; 
+}

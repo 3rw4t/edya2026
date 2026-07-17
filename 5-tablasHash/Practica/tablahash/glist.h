@@ -5,6 +5,7 @@ typedef void (*FuncionDestructora)(void *dato);
 typedef void *(*FuncionCopia)(void *dato);
 typedef void (*FuncionVisitante)(void *dato);
 typedef int (*Predicado)(void *dato);
+typedef int (*FuncionComparadora)(void* dato1, void* dato2);
 typedef struct _GNode {
   void *data;
   struct _GNode *next;
@@ -45,5 +46,17 @@ void glist_recorrer(GList lista, FuncionVisitante visitar);
 
 
 GList glist_filtrar(GList lista, FuncionCopia c, Predicado p);
+
+
+/*
+  Retorna 1 si el dato está en la lista, 0 si no.
+*/
+int glist_contiene(GList lista, void* dato, FuncionComparadora cmp);
+
+
+/*
+  Retorna el elemento si está en la lista, NULL si no
+*/
+GList glist_buscar(GList lista, void* dato, FuncionComparadora cmp);
 
 #endif /* __GLIST_H__ */

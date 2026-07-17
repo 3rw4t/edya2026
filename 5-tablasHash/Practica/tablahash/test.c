@@ -41,20 +41,20 @@ int main() {
     else
       printf("\tInsercion exitosa.\n");
   }
-/*
+
   // Buscar
   printf("\nBusqueda:\n");
   for (int i = 0; i < 6; ++i) {
     printf("Buscando el contacto: ");
     contacto_imprimir(agenda[i]);
     puts("");
-    Contacto *ret = tablahash_buscar(tabla, agenda[i]);
+    Contacto *ret = tablahash_buscar_chaining(tabla, agenda[i]);
     if (ret != NULL)
       printf("\tSe encuentra en la tabla.\n");
     else
       printf("\tNo se encuentra en la tabla.\n");
   }
-
+/*
   // Eliminar
   printf("\nEliminacion:\n");
   for (int i = 5; i > 2; --i) {
