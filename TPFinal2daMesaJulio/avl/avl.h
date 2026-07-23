@@ -48,4 +48,6 @@ void avl_recorrer(AVL, AVLRecorrido, FuncionVisitanteExtra, void *);
 
 void avl_eliminar(AVL arbol, void* dato);
 
+void avl_recorrer_rango(AVL arbol, void* min, void* max, FuncionVisitanteExtra visit, void* extra);
+
 #endif /* __AVL_H__*/

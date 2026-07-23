@@ -48,6 +48,8 @@ Inventario inventario_crear(int capacidad){
 */
 Item item_crear(int id, char* nombre, double precio, int stock){
     assert(nombre != NULL);
+    assert(precio >= 0);
+    assert(stock >= 0);
 
     Item it = malloc(sizeof(struct _Item));
     assert(it);
@@ -92,7 +94,6 @@ void item_destruir(Item it){
     free(it->nombre);
     free(it);
 }
-
 
 /*
     Funcion que pide la implementación de AVL para destruir el item. Debido a que la eliminacion en hash y avl a la vez conllevaría errores,
@@ -207,7 +208,7 @@ void inventario_listar_rango(Inventario inv, double precio_min, double precio_ma
 void inventario_eliminar_por_id(Inventario inv, int id){
     assert(inv != NULL);
     assert(inv->tabla != NULL);
-    
+
     struct _Item temp = {.id = id, .nombre = NULL, .precio = 0.0, .stock = 0};
 
     Item eliminar = tablahash_buscar(inv->tabla, &temp);
@@ -236,14 +237,15 @@ void inventario_actualizar_precio(Inventario inv, int id, double nuevo_precio){
 /*
     Función visitante que compara el precio del item y si lo agrega a la lista si es necesario
 */
-static void recolectar_para_descuento(void* dato, void* extra) {
+void recolectar_para_descuento(void* dato, void* extra) {
     Item prod = (Item)dato;
+    assert(extra != NULL);
     ContextoRango* ctx = (ContextoRango*)extra;
 
     if (prod->precio >= ctx->min && prod->precio <= ctx->max) {
 
         // NULL ya que la idea es guardar el puntero temporalmente. 
-        ctx->productos = glist_agregar_inicio(ctx->productos, prod, NULL);
+        ctx->productos = glist_agregar_inicio(ctx->productos, prod, (FuncionCopia) item_copiar);
     }
 }
 
@@ -255,9 +257,14 @@ void inventario_aplicar_descuento(Inventario inv, double precio_min, double prec
     assert(inv->avl != NULL);
     assert(precio_min <= precio_max);
 
+    // se crean 2 items temporales como cotas
+    // al minimo se le pone id 0 y al segundo un id gigante (segun google ese es el valor maximo para int)
+    struct _Item lim_min = {.id = 0, .nombre = NULL, .precio = precio_min, .stock = 0};
+    struct _Item lim_max = {.id = 2147483647, .nombre = NULL, .precio = precio_max, .stock = 0};
+
     ContextoRango ctx = {.min = precio_min, .max = precio_max, .productos = NULL};
 
-    avl_recorrer(inv->avl, AVL_RECORRIDO_IN, recolectar_para_descuento, &ctx);
+    avl_recorrer_rango(inv->avl, &lim_min, &lim_max, recolectar_para_descuento, &ctx);
 
     GList actual = ctx.productos;
     while (actual != NULL) {
@@ -270,7 +277,7 @@ void inventario_aplicar_descuento(Inventario inv, double precio_min, double prec
         actual = actual->next;
     }
 
-    glist_destruir(ctx.productos, NULL);
+    glist_destruir(ctx.productos, (FuncionDestructora) item_destruir_avl);
 }
 
 

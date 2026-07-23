@@ -283,32 +283,28 @@ void avl_recorrer(AVL arbol, AVLRecorrido orden, FuncionVisitanteExtra visita, v
   } else if (c > 0) {
     raiz->der = avl_nodo_eliminar(raiz->der, dato, comp, destr);
   } else {
-    // Nodo encontrado
+
     if (raiz->izq == NULL || raiz->der == NULL) {
       AVL_Nodo* temp = raiz->izq ? raiz->izq : raiz->der;
 
       if (temp == NULL) {
-        // Sin hijos
+
         temp = raiz;
         raiz = NULL;
       } else {
-        // Un solo hijo
+
         *raiz = *temp;
       }
       destr(temp->dato);
       free(temp);
     } else {
-      // Nodo con dos hijos: buscar sucesor in-order (mínimo del subárbol derecho)
+
       AVL_Nodo* temp = avl_nodo_minimo(raiz->der);
       
-      // Destruir el dato actual antes de reemplazarlo
       destr(raiz->dato);
       
-      // Copiar referencia del dato
-      raiz->dato = temp->dato; // O la copia si preferís
+      raiz->dato = temp->dato;
       
-      // Ojo: para no destruir el dato al borrar el nodo duplicado abajo, 
-      // pasamos una función destructora dummy o manejamos la liberación con cuidado.
       raiz->der = avl_nodo_eliminar(raiz->der, temp->dato, comp, destr);
     }
   }
@@ -316,13 +312,10 @@ void avl_recorrer(AVL arbol, AVLRecorrido orden, FuncionVisitanteExtra visita, v
   if (raiz == NULL)
     return NULL;
 
-  // Actualizar altura
   raiz->altura = 1 + avl_nodo_max_altura_hijos(raiz);
 
-  // Rebalancear
   int fb = avl_nodo_factor_balance(raiz);
 
-  // Izquierda desbalanceada (FB == -2)
   if (fb == -2) {
     if (avl_nodo_factor_balance(raiz->izq) <= 0) {
       return avl_nodo_rotacion_simple_der(raiz);
@@ -332,7 +325,6 @@ void avl_recorrer(AVL arbol, AVLRecorrido orden, FuncionVisitanteExtra visita, v
     }
   }
 
-  // Derecha desbalanceada (FB == 2)
   if (fb == 2) {
     if (avl_nodo_factor_balance(raiz->der) >= 0) {
       return avl_nodo_rotacion_simple_izq(raiz);
@@ -349,4 +341,25 @@ void avl_eliminar(AVL arbol, void* dato) {
   if (arbol != NULL && arbol->raiz != NULL) {
     arbol->raiz = avl_nodo_eliminar(arbol->raiz, dato, arbol->comp, arbol->destr);
   }
+}
+
+void re_rango(AVL_Nodo* nodo, void* min, void* max, FuncionComparadora comp, FuncionVisitanteExtra visit, void* extra) {
+  if (nodo == NULL) return;
+
+  if (comp(nodo->dato, min) > 0) {
+    re_rango(nodo->izq, min, max, comp, visit, extra);
+  }
+
+  if (comp(nodo->dato, min) >= 0 && comp(nodo->dato, max) <= 0) {
+    visit(nodo->dato, extra);
+  }
+
+  if (comp(nodo->dato, max) < 0) {
+    re_rango(nodo->der, min, max, comp, visit, extra);
+  }
+}
+
+void avl_recorrer_rango(AVL arbol, void* min, void* max, FuncionVisitanteExtra visit, void* extra) {
+  if (!arbol || !arbol->raiz) return;
+  re_rango(arbol->raiz, min, max, arbol->comp, visit, extra);
 }

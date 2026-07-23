@@ -38,7 +38,6 @@ Inventario inventario_crear(int capacidad);
 */
 Item item_crear(int id, char* nombre, double precio, int stock);
 
-
 /*
     Imprime los valores de un item: "ID: %d, Nombre: %s, Precio: %f, Stock: %d\n"
 */
