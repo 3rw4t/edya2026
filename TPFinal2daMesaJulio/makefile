@@ -23,6 +23,6 @@ avl.o: avl/avl.c avl/avl.h
 
 clean:
 	rm *.o
-	rm test
+	rm programa
 
 .PHONY = clean

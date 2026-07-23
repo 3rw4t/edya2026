@@ -84,7 +84,7 @@ void tablahash_insertar(TablaHash tabla, void *dato) {
   // Calculamos la posicion del dato dado, de acuerdo a la funcion hash.
   unsigned idx = tabla->hash(dato) % tabla->capacidad;
 
-  // Insertar el dato si la casilla estaba libre.
+
   if (!glist_buscar(tabla->elems[idx].dato, dato, tabla->comp)) {
     tabla->numElems++;
     tabla->elems[idx].dato = glist_agregar_inicio(tabla->elems[idx].dato, dato, tabla->copia);
@@ -111,7 +111,6 @@ void *tablahash_buscar(TablaHash tabla, void *dato) {
  */
 void tablahash_eliminar(TablaHash tabla, void *dato) {
 
-  // Calculamos la posicion del dato dado, de acuerdo a la funcion hash.
   unsigned idx = tabla->hash(dato) % tabla->capacidad;
 
   if(glist_buscar(tabla->elems[idx].dato, dato, tabla->comp)) {

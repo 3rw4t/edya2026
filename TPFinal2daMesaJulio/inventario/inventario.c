@@ -223,6 +223,7 @@ void inventario_eliminar_por_id(Inventario inv, int id){
 */
 void inventario_actualizar_precio(Inventario inv, int id, double nuevo_precio){
     assert(inv != NULL);
+    assert(inv->tabla != NULL);
 
     Item it = inventario_buscar_por_id(inv,id);
     
@@ -264,6 +265,7 @@ void inventario_aplicar_descuento(Inventario inv, double precio_min, double prec
 
     ContextoRango ctx = {.min = precio_min, .max = precio_max, .productos = NULL};
 
+    // se recorre una parte del AVL
     avl_recorrer_rango(inv->avl, &lim_min, &lim_max, recolectar_para_descuento, &ctx);
 
     GList actual = ctx.productos;

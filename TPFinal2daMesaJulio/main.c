@@ -73,10 +73,15 @@ int main(int argc, char *argv[]) {
     
     puts("");
     puts(" 8) Función inventario_aplicar_descuento");
-    puts("Aplicamos un despuento del 33%% a todos los productos en el rango [2000, 10000]");
-    inventario_aplicar_descuento(inv, 2000, 10000, 33);
+    puts("Aplicamos un despuento del 33.33%% a todos los productos en el rango [2000, 10000]");
+    inventario_aplicar_descuento(inv, 2000, 10000, 33.33);
     puts("Finalmente, vemos los productos cuyo precio esté en el rango [2000, 10000]");
     inventario_listar_rango(inv, 2000.0, 10000.0);
-    
+
+
+    puts("");
+    puts("Listado final de productos:");
+    inventario_listar_rango(inv, 0, 99999999);
+
     return 0;
 }
