@@ -110,7 +110,7 @@ void inventario_eliminar_por_id(Inventario inv, int id);
 void inventario_actualizar_precio(Inventario inv, int id, double nuevo_precio);
 
 /*
-    Reduce en 'porcentaje' el precio del producto con el id dado. Si no existe un producto con ese id, la función no tiene efecto.
+    Aplica el porcentaje de descuento a los productos en el rango [precio_min, precio_max].
 */
 void inventario_aplicar_descuento(Inventario inv, double precio_min, double precio_max, double porcentaje);
 

@@ -34,9 +34,11 @@ int main(int argc, char *argv[]) {
 
     puts("");
 
-    //buscamos un item por id
+    //buscamos un item existente por id y lo imprimimos
     item_imprimir(inventario_buscar_por_id(inv, 1));
 
+    // Ahora intentamos imprimir un item que no existe
+    item_imprimir(inventario_buscar_por_id(inv, 57));
 
 
     return 0;

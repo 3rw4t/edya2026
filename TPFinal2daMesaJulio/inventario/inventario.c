@@ -18,20 +18,28 @@ struct _Item{
 };
 
 /*
-    Estructura auxiliar para buscar items dentro de determinado rango de precio
+    Estructura auxiliar para aplicar un determinado descuento a los productos dentro del rango requerido
 */
 typedef struct {
     double min;
     double max;
-} RangoPrecio;
+    GList productos;
+} ContextoRango;
+
 
 /*
     Devuelve un inventario vacio
 */
 Inventario inventario_crear(int capacidad){
     Inventario inv = malloc(sizeof(struct _Inventario));
+    assert(inv != NULL);
+
     inv->tabla = tablahash_crear(capacidad, (FuncionCopiadora) item_copiar, (FuncionComparadora) item_comparar_id,(FuncionDestructora) item_destruir, (FuncionHash) item_hash);
+    assert(inv->tabla != NULL);
+
     inv->avl = avl_crear((FuncionCopiadora) item_copiar, (FuncionComparadora) item_comparar_precio, (FuncionDestructora) item_destruir_avl);
+    assert(inv->avl != NULL);
+
     return inv;
 }
 
@@ -39,9 +47,15 @@ Inventario inventario_crear(int capacidad){
     Devuelve un item nuevo con los valores ingresados
 */
 Item item_crear(int id, char* nombre, double precio, int stock){
+    assert(nombre != NULL);
+
     Item it = malloc(sizeof(struct _Item));
+    assert(it);
+
     it->id = id;
     it->nombre = malloc(sizeof(char) * (strlen(nombre) + 1));
+    assert(it->nombre);
+
     strcpy(it->nombre, nombre);
     it->precio = precio;
     it->stock = stock;
@@ -53,7 +67,12 @@ Item item_crear(int id, char* nombre, double precio, int stock){
     Imprime los valores de un item: "ID: %d, Nombre: %s, Precio: %f, Stock: %d\n"
 */
 void item_imprimir(Item it){
-    printf("ID: %d, Nombre: %s, Precio: %f, Stock: %d\n", it->id, it->nombre, it->precio, it->stock);
+    if(it){
+        printf("ID: %d, Nombre: %s, Precio: %f, Stock: %d\n", it->id, it->nombre, it->precio, it->stock);
+    }else{
+        printf("El item no existe!\n");  
+    }
+     
 }
 
 /*
@@ -67,6 +86,9 @@ Item item_copiar(Item it){
     Libera la memoria ocupada por elitem
 */
 void item_destruir(Item it){
+    assert(it != NULL);
+    assert(it->nombre != NULL);
+
     free(it->nombre);
     free(it);
 }
@@ -84,6 +106,9 @@ void item_destruir_avl(Item it){
     Devuelve la diferencia entre los ids de i1 e i2 (i1->id - i2->id)
 */
 int item_comparar_id(Item i1, Item i2){
+    assert(i1 != NULL);
+    assert(i2 != NULL);
+  
     return i1->id - i2->id;
 }
 
@@ -94,6 +119,9 @@ int item_comparar_id(Item i1, Item i2){
     Solo devuelve 0 si tanto precio como id son iguales (lo que no tendría mucho sentido porque se estaría intentando ingresar el mismo producto 2 veces)
 */
 int item_comparar_precio(Item i1, Item i2){
+    assert(i1 != NULL);
+    assert(i2 != NULL);
+
     if (i1->precio < i2->precio) return -1;
     if (i1->precio > i2->precio) return 1;
     if (i1->id < i2->id) return -1;
@@ -105,6 +133,8 @@ int item_comparar_precio(Item i1, Item i2){
     Función hash para los items. Simplemente devuelve el id en este caso
 */
 unsigned int item_hash(Item it){
+    assert(it != NULL);
+
     return (unsigned int)it->id;
 }
 
@@ -112,7 +142,9 @@ unsigned int item_hash(Item it){
     Agrega un nuevo producto al inventario.
 */
 void inventario_insertar(Inventario inv, int id, char *nombre, double precio, int stock){
-    if(!inv) return;
+    assert(inv != NULL);
+    assert(inv->tabla != NULL);
+
     struct _Item temp = {.id = id, .nombre = NULL, .precio = 0.0, .stock = 0};
     if(tablahash_buscar(inv->tabla, &temp) != NULL) return;
 
@@ -125,7 +157,8 @@ void inventario_insertar(Inventario inv, int id, char *nombre, double precio, in
     Devuelve el producto con el id dado, NULL si no existe.
 */
 Item inventario_buscar_por_id(Inventario inv, int id){
-    if(!inv) return NULL;
+    assert(inv != NULL);
+    assert(inv->tabla != NULL);
 
     struct _Item temp = {.id =id, .nombre = NULL, .precio=0, .stock=0};
 
@@ -137,6 +170,9 @@ Item inventario_buscar_por_id(Inventario inv, int id){
     Actualiza el stock del producto con el id dado. Si no existe, no hace nada.
 */
 void inventario_actualizar_stock(Inventario inv, int id, int nuevo_stock){
+    assert(inv != NULL);
+    assert(inv->tabla != NULL);
+
     struct _Item temp = {.id =id, .nombre = NULL, .precio=0, .stock=0};
     Item resultado = tablahash_buscar(inv->tabla, &temp);
     if(resultado)resultado->stock = nuevo_stock;
@@ -147,7 +183,7 @@ void inventario_actualizar_stock(Inventario inv, int id, int nuevo_stock){
 */
 void imprimir_si_en_rango(void* dato, void* extra) {
     Item it = (Item)dato;
-    RangoPrecio* rango = (RangoPrecio*)extra;
+    ContextoRango* rango = (ContextoRango*)extra;
 
     if (it->precio >= rango->min && it->precio <= rango->max) item_imprimir(it);
 }
@@ -156,9 +192,11 @@ void imprimir_si_en_rango(void* dato, void* extra) {
     Imprime los productos cuyo precio se encuentre en rango [precio_min, precio_max]
 */
 void inventario_listar_rango(Inventario inv, double precio_min, double precio_max) {
-    if (!inv || !inv->avl) return;
-
-    RangoPrecio rango = { .min = precio_min, .max = precio_max };
+    assert(inv != NULL);
+    assert(inv->avl != NULL);
+    assert(precio_min <= precio_max);
+    
+    ContextoRango rango = {.min = precio_min, .max = precio_max, .productos = NULL};
 
     avl_recorrer(inv->avl, AVL_RECORRIDO_IN, imprimir_si_en_rango, &rango);
 }
@@ -167,8 +205,9 @@ void inventario_listar_rango(Inventario inv, double precio_min, double precio_ma
     Elimina el producto con el id dado. Si no existe, no hace nada.
 */
 void inventario_eliminar_por_id(Inventario inv, int id){
-    if (!inv) return;
-
+    assert(inv != NULL);
+    assert(inv->tabla != NULL);
+    
     struct _Item temp = {.id = id, .nombre = NULL, .precio = 0.0, .stock = 0};
 
     Item eliminar = tablahash_buscar(inv->tabla, &temp);
@@ -182,9 +221,9 @@ void inventario_eliminar_por_id(Inventario inv, int id){
     Actualiza el precio del producto con el id dado. Si no  existe un producto con ese id, la función no tiene efecto.
 */
 void inventario_actualizar_precio(Inventario inv, int id, double nuevo_precio){
-    if (!inv) return;
+    assert(inv != NULL);
 
-    Item it = inventario_buscar_por_id (inv,id);
+    Item it = inventario_buscar_por_id(inv,id);
     
     if (!it) return;
 
@@ -192,23 +231,17 @@ void inventario_actualizar_precio(Inventario inv, int id, double nuevo_precio){
     it->precio = nuevo_precio;
     avl_insertar(inv->avl, it);
 }
-/*
-    Estructura auxiliar para aplicar un determinado descuento a los productos dentro del rango requerido
-*/
-typedef struct {
-    double min;
-    double max;
-    GList productos;
-} ContextoDescuento;
+
 
 /*
     Función visitante que compara el precio del item y si lo agrega a la lista si es necesario
 */
 static void recolectar_para_descuento(void* dato, void* extra) {
     Item prod = (Item)dato;
-    ContextoDescuento* ctx = (ContextoDescuento*)extra;
+    ContextoRango* ctx = (ContextoRango*)extra;
 
     if (prod->precio >= ctx->min && prod->precio <= ctx->max) {
+
         // NULL ya que la idea es guardar el puntero temporalmente. 
         ctx->productos = glist_agregar_inicio(ctx->productos, prod, NULL);
     }
@@ -218,9 +251,11 @@ static void recolectar_para_descuento(void* dato, void* extra) {
     Aplica el porcentaje de descuento a los productos en el rango [precio_min, precio_max].
 */
 void inventario_aplicar_descuento(Inventario inv, double precio_min, double precio_max, double porcentaje) {
-    if (!inv || !inv->avl) return;
+    assert(inv != NULL);
+    assert(inv->avl != NULL);
+    assert(precio_min <= precio_max);
 
-    ContextoDescuento ctx = {precio_min, precio_max, NULL};
+    ContextoRango ctx = {.min = precio_min, .max = precio_max, .productos = NULL};
 
     avl_recorrer(inv->avl, AVL_RECORRIDO_IN, recolectar_para_descuento, &ctx);
 
