@@ -45,3 +45,28 @@ void glist_recorrer(GList list, FuncionVisitante visit) {
   for (GNode *node = list; node != NULL; node = node->next)
     visit(node->data);
 }
+
+/*
+  Retorna el elemento si está en la lista, NULL si no
+*/
+GList glist_buscar(GList lista, void* dato, FuncionComparadora cmp){
+  if(!dato) return NULL;
+  for(;lista;lista =  lista->next) if (cmp(lista->data, dato) == 0) return lista;
+  return NULL; 
+}
+
+
+GList glist_eliminar(GList lista, void * dato, FuncionComparadora cmp, FuncionDestructora destr){
+  if(!lista)return NULL;
+  if(!dato) return lista;
+
+  if(cmp(lista->data, dato) == 0){
+    destr(lista->data);
+    
+    GList temp = lista->next;
+    free(lista);
+    return temp;
+  }
+  lista->next = glist_eliminar(lista->next, dato, cmp, destr);
+  return lista;
+}

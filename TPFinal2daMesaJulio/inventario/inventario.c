@@ -104,9 +104,7 @@ Item inventario_buscar_por_id(Inventario inv, int id){
     if(!inv) return NULL;
 
     struct _Item temp = {.id =id, .nombre = NULL, .precio=0, .stock=0};
-    printf("\n[DEBUG] ID buscado: %d | Hash calculado: %d | Casilla: %d\n", 
-           id, item_hash(&temp), item_hash(&temp) % tablahash_capacidad(inv->tabla));
-    
+
     Item resultado = tablahash_buscar(inv->tabla, &temp);
     return resultado ;
 }

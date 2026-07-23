@@ -4,6 +4,7 @@
 typedef void (*FuncionDestructora)(void *dato);
 typedef void *(*FuncionCopia)(void *dato);
 typedef void (*FuncionVisitante)(void *dato);
+typedef int (*FuncionComparadora)(void* dato1, void* dato2);
 
 typedef struct _GNode {
   void *data;
@@ -37,4 +38,8 @@ GList glist_agregar_inicio(GList lista, void *dato, FuncionCopia copiar);
  */
 void glist_recorrer(GList lista, FuncionVisitante visitar);
 
+
+GList glist_buscar(GList lista, void* dato, FuncionComparadora cmp);
+
+GList glist_eliminar(GList lista, void * dato, FuncionComparadora cmp, FuncionDestructora destr);
 #endif /* __GLIST_H__ */

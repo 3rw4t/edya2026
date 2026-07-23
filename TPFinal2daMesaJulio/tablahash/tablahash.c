@@ -7,7 +7,7 @@
  * Casillas en la que almacenaremos los datos de la tabla hash.
  */
 typedef struct {
-  void* dato;
+  GList dato;
 } CasillaHash;
 
 /**
@@ -77,8 +77,7 @@ void tablahash_destruir(TablaHash tabla) {
 }
 
 /**
- * Inserta un dato en la tabla, o lo reemplaza si ya se encontraba.
- * IMPORTANTE: La implementacion no maneja colisiones.
+ * Inserta un dato en la tabla.
  */
 void tablahash_insertar(TablaHash tabla, void *dato) {
 
@@ -86,19 +85,9 @@ void tablahash_insertar(TablaHash tabla, void *dato) {
   unsigned idx = tabla->hash(dato) % tabla->capacidad;
 
   // Insertar el dato si la casilla estaba libre.
-  if (tabla->elems[idx].dato == NULL) {
+  if (!glist_buscar(tabla->elems[idx].dato, dato, tabla->comp)) {
     tabla->numElems++;
-    tabla->elems[idx].dato = tabla->copia(dato);
-    return;
-  }
-  // Sobrescribir el dato si el mismo ya se encontraba en la tabla.
-  else if (tabla->comp(tabla->elems[idx].dato, dato) == 0) {
-    tabla->destr(tabla->elems[idx].dato);
-    tabla->elems[idx].dato = tabla->copia(dato);
-    return;
-  }
-  // No hacer nada si hay colision.
-  else {
+    tabla->elems[idx].dato = glist_agregar_inicio(tabla->elems[idx].dato, dato, tabla->copia);
     return;
   }
 }
@@ -111,16 +100,10 @@ void *tablahash_buscar(TablaHash tabla, void *dato) {
 
   // Calculamos la posicion del dato dado, de acuerdo a la funcion hash.
   unsigned idx = tabla->hash(dato) % tabla->capacidad;
+  GList temp = glist_buscar(tabla->elems[idx].dato, dato, tabla->comp);
 
-  // Retornar NULL si la casilla estaba vacia.
-  if (tabla->elems[idx].dato == NULL)
-    return NULL;
-  // Retornar el dato de la casilla si hay concidencia.
-  else if (tabla->comp(tabla->elems[idx].dato, dato) == 0)
-    return tabla->elems[idx].dato;
-  // Retornar NULL en otro caso.
-  else
-    return NULL;
+  return temp ? temp->data : NULL;
+
 }
 
 /**
@@ -131,14 +114,8 @@ void tablahash_eliminar(TablaHash tabla, void *dato) {
   // Calculamos la posicion del dato dado, de acuerdo a la funcion hash.
   unsigned idx = tabla->hash(dato) % tabla->capacidad;
 
-  // Retornar si la casilla estaba vacia.
-  if (tabla->elems[idx].dato == NULL)
-    return;
-  // Vaciar la casilla si hay coincidencia.
-  else if (tabla->comp(tabla->elems[idx].dato, dato) == 0) {
+  if(glist_buscar(tabla->elems[idx].dato, dato, tabla->comp)) {
     tabla->numElems--;
-    tabla->destr(tabla->elems[idx].dato);
-    tabla->elems[idx].dato = NULL;
-    return;
+    tabla->elems[idx].dato = glist_eliminar(tabla->elems[idx].dato, dato, tabla->comp, tabla->destr);
   }
 }

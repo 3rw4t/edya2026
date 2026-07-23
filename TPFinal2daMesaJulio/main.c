@@ -3,16 +3,16 @@
 #include <stdlib.h>
 
 #define CAPACIDAD_INICIAL 11
-
+#define MAX_NOMBRE 100
 int main() {
     Inventario inv = inventario_crear(CAPACIDAD_INICIAL);
 
-    printf("=== 1. CARGA INICIAL DE PRODUCTOS ===\n");
+    printf("carga de inventario\n");
     inventario_insertar(inv, 1, "Papas", 3000.0, 15);
-    inventario_insertar(inv, 2, "Mani", 2550.0, 10);
-    inventario_insertar(inv, 3, "Huevos", 3000.0, 5);
+    inventario_insertar(inv, 13, "Mani", 2550.0, 10);
+    inventario_insertar(inv, 56, "Huevos", 3000.0, 5);
     inventario_insertar(inv, 5, "Huevos2", 3000.0, 5);
-    inventario_insertar(inv, 6, "Monitor", 280000.0, 2);
+    inventario_insertar(inv, 12, "Monitor", 280000.0, 2);
 
     printf("\n[Estado Inicial - Listado por rango del AVL ($0 a $300,000)]:\n");
     // Nota: Deberían salir ordenados por PRECIO de menor a mayor (Mani -> Papas -> Huevos -> Monitor)
@@ -79,7 +79,7 @@ int main() {
     inventario_listar_rango(inv, 0.0, 300000.0);
 
     printf("\nVerificando que la Tabla Hash también vea los precios con descuento:\n");
-    Item p_huevo = inventario_buscar_por_id(inv, 3);
+    Item p_huevo = inventario_buscar_por_id(inv, 56);
     if (p_huevo) {
         printf("\tHash devolvió Huevos -> ");
         item_imprimir(p_huevo);
