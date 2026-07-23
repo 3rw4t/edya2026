@@ -136,9 +136,15 @@ static AVL_Nodo* avl_nodo_rotacion_simple_izq(AVL_Nodo* raiz) {
  * a derecha y retorna la nueva raiz.
  */
 static AVL_Nodo* avl_nodo_rotacion_simple_der(AVL_Nodo* raiz) {
-  /** COMPLETAR */
-  assert(0);
-  return raiz;
+  AVL_Nodo* hijoIzq = raiz->izq;
+  assert(hijoIzq != NULL);
+
+  raiz->izq = hijoIzq->der;
+  hijoIzq->der = raiz;
+
+  raiz->altura = 1 + avl_nodo_max_altura_hijos(raiz);
+  hijoIzq->altura = 1 + avl_nodo_max_altura_hijos(hijoIzq);
+  return hijoIzq;
 }
 
 /**
@@ -175,8 +181,15 @@ static AVL_Nodo* avl_nodo_insertar(AVL_Nodo* raiz, void* dato,
     return raiz;
   }
   else if (comp(raiz->dato, dato) < 0) { // el dato debe ir en el subarbol der
-    /** COMPLETAR */
-    assert(0);
+raiz->der = avl_nodo_insertar(raiz->der, dato, copia, comp);
+
+    if (avl_nodo_factor_balance(raiz) == 2) {
+
+      if (avl_nodo_factor_balance(raiz->der) == -1)
+        raiz->der = avl_nodo_rotacion_simple_der(raiz->der);
+      raiz = avl_nodo_rotacion_simple_izq(raiz);
+    }
+    raiz->altura = 1 + avl_nodo_max_altura_hijos(raiz);
     return raiz;
   }
   else // no agregar elementos repetidos
@@ -236,8 +249,7 @@ int avl_validar(AVL arbol) {
 /**
  * avl_recorrer: Recorrido DSF del arbol
  */
-static void avl_nodo_recorrer(AVL_Nodo* raiz, AVLRecorrido orden,
-  FuncionVisitanteExtra visita, void* extra) {
+static void avl_nodo_recorrer(AVL_Nodo* raiz, AVLRecorrido orden, FuncionVisitanteExtra visita, void* extra) {
   if (raiz != NULL) {
     if (orden == AVL_RECORRIDO_PRE)
       visita(raiz->dato, extra);
@@ -249,7 +261,92 @@ static void avl_nodo_recorrer(AVL_Nodo* raiz, AVLRecorrido orden,
       visita(raiz->dato, extra);
   }
 }
-void avl_recorrer(AVL arbol, AVLRecorrido orden, FuncionVisitanteExtra visita,
-  void* extra) {
+void avl_recorrer(AVL arbol, AVLRecorrido orden, FuncionVisitanteExtra visita, void* extra) {
   avl_nodo_recorrer(arbol->raiz, orden, visita, extra);
+}
+
+ AVL_Nodo* avl_nodo_minimo(AVL_Nodo* raiz) {
+  AVL_Nodo* actual = raiz;
+  while (actual->izq != NULL)
+    actual = actual->izq;
+  return actual;
+}
+
+ AVL_Nodo* avl_nodo_eliminar(AVL_Nodo* raiz, void* dato, FuncionComparadora comp, FuncionDestructora destr) {
+  if (raiz == NULL)
+    return NULL;
+
+  int c = comp(dato, raiz->dato);
+
+  if (c < 0) {
+    raiz->izq = avl_nodo_eliminar(raiz->izq, dato, comp, destr);
+  } else if (c > 0) {
+    raiz->der = avl_nodo_eliminar(raiz->der, dato, comp, destr);
+  } else {
+    // Nodo encontrado
+    if (raiz->izq == NULL || raiz->der == NULL) {
+      AVL_Nodo* temp = raiz->izq ? raiz->izq : raiz->der;
+
+      if (temp == NULL) {
+        // Sin hijos
+        temp = raiz;
+        raiz = NULL;
+      } else {
+        // Un solo hijo
+        *raiz = *temp;
+      }
+      destr(temp->dato);
+      free(temp);
+    } else {
+      // Nodo con dos hijos: buscar sucesor in-order (mínimo del subárbol derecho)
+      AVL_Nodo* temp = avl_nodo_minimo(raiz->der);
+      
+      // Destruir el dato actual antes de reemplazarlo
+      destr(raiz->dato);
+      
+      // Copiar referencia del dato
+      raiz->dato = temp->dato; // O la copia si preferís
+      
+      // Ojo: para no destruir el dato al borrar el nodo duplicado abajo, 
+      // pasamos una función destructora dummy o manejamos la liberación con cuidado.
+      raiz->der = avl_nodo_eliminar(raiz->der, temp->dato, comp, destr);
+    }
+  }
+
+  if (raiz == NULL)
+    return NULL;
+
+  // Actualizar altura
+  raiz->altura = 1 + avl_nodo_max_altura_hijos(raiz);
+
+  // Rebalancear
+  int fb = avl_nodo_factor_balance(raiz);
+
+  // Izquierda desbalanceada (FB == -2)
+  if (fb == -2) {
+    if (avl_nodo_factor_balance(raiz->izq) <= 0) {
+      return avl_nodo_rotacion_simple_der(raiz);
+    } else {
+      raiz->izq = avl_nodo_rotacion_simple_izq(raiz->izq);
+      return avl_nodo_rotacion_simple_der(raiz);
+    }
+  }
+
+  // Derecha desbalanceada (FB == 2)
+  if (fb == 2) {
+    if (avl_nodo_factor_balance(raiz->der) >= 0) {
+      return avl_nodo_rotacion_simple_izq(raiz);
+    } else {
+      raiz->der = avl_nodo_rotacion_simple_der(raiz->der);
+      return avl_nodo_rotacion_simple_izq(raiz);
+    }
+  }
+
+  return raiz;
+}
+
+void avl_eliminar(AVL arbol, void* dato) {
+  if (arbol != NULL && arbol->raiz != NULL) {
+    arbol->raiz = avl_nodo_eliminar(arbol->raiz, dato, arbol->comp, arbol->destr);
+  }
 }

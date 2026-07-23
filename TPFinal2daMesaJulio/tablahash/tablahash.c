@@ -1,4 +1,5 @@
 #include "tablahash.h"
+#include "../glist/glist.h"
 #include <assert.h>
 #include <stdlib.h>
 
@@ -6,7 +7,7 @@
  * Casillas en la que almacenaremos los datos de la tabla hash.
  */
 typedef struct {
-  void *dato;
+  void* dato;
 } CasillaHash;
 
 /**
